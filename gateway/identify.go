@@ -76,7 +76,7 @@ type IdentifyData struct {
 
 	Presence *UpdateStatusData `json:"presence,omitempty"`
 
-	Intents Intents `json:"intents,omitempty"`
+	Intents Intents `json:"intents"`
 }
 
 // DefaultIdentifyData creates a default IdentifyData with the given token.
