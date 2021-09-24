@@ -97,6 +97,9 @@ type CommandOption struct {
 	Required    bool                  `json:"required"`
 	Choices     []CommandOptionChoice `json:"choices,omitempty"`
 	Options     []CommandOption       `json:"options,omitempty"`
+	// ChannelTypes will restrict the channels shown to these types.
+	// It is only valid for ChannelOptions.
+	ChannelTypes []ChannelType `json:"channel_types,omitempty"`
 }
 
 type CommandOptionType uint
