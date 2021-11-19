@@ -382,6 +382,8 @@ type StartThreadData struct {
 	//
 	// This field can only be used when starting a thread without a message
 	Invitable bool `json:"invitable,omitempty"`
+	// Invitable is the amount of seconds a user has to wait before sending another message (0-21600).
+	UserRateLimit discord.Seconds `json:"rate_limit_per_user,omitempty"`
 
 	AuditLogReason `json:"-"`
 }

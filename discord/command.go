@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/diamondburned/arikawa/v3/utils/json"
+	"github.com/diamondburned/arikawa/v3/utils/json/option"
 	"github.com/pkg/errors"
 )
 
@@ -358,10 +359,13 @@ type StringChoice struct {
 
 // IntegerOption is a subcommand option that fits into a CommandOptionValue.
 type IntegerOption struct {
-	OptionName  string          `json:"name"`
-	Description string          `json:"description"`
-	Required    bool            `json:"required"`
-	Choices     []IntegerChoice `json:"choices,omitempty"`
+	OptionName   string          `json:"name"`
+	Description  string          `json:"description"`
+	Required     bool            `json:"required"`
+	Choices      []IntegerChoice `json:"choices,omitempty"`
+	Autocomplete bool            `json:"autocomplete"`
+	MinValue     option.Int      `json:"min_value"`
+	MaxValue     option.Int      `json:"max_value"`
 }
 
 // Name implements CommandOption.
@@ -450,10 +454,13 @@ func (m *MentionableOption) _val()                   {}
 
 // NumberOption is a subcommand option that fits into a CommandOptionValue.
 type NumberOption struct {
-	OptionName  string         `json:"name"`
-	Description string         `json:"description"`
-	Required    bool           `json:"required"`
-	Choices     []NumberChoice `json:"choices,omitempty"`
+	OptionName   string         `json:"name"`
+	Description  string         `json:"description"`
+	Required     bool           `json:"required"`
+	Choices      []NumberChoice `json:"choices,omitempty"`
+	Autocomplete bool           `json:"autocomplete"`
+	MinValue     option.Float64 `json:"min_value"`
+	MaxValue     option.Float64 `json:"max_value"`
 }
 
 // Name implements CommandOption.

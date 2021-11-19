@@ -37,6 +37,10 @@ const (
 	SuppressJoinNotifications SystemChannelFlags = 1 << iota
 	// SuppressPremiumSubscriptions suppresses server boost notifications.
 	SuppressPremiumSubscriptions
+	// SuppressGuildReminderNotifications suppresses server setup tips.
+	SuppressGuildReminderNotifications
+	// SuppressJoinNotificationReplies hides member join sticker reply buttons.
+	SuppressJoinNotificationReplies
 )
 
 type GuildFeature string

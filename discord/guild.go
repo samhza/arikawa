@@ -1,6 +1,11 @@
 package discord
 
-import "time"
+import (
+	"time"
+
+	"github.com/diamondburned/arikawa/v3/utils/json"
+	"github.com/pkg/errors"
+)
 
 // https://discord.com/developers/docs/resources/guild#guild-object
 type Guild struct {
@@ -290,21 +295,24 @@ type Role struct {
 	ID RoleID `json:"id"`
 	// Name is the role name.
 	Name string `json:"name"`
-
 	// Permissions is the permission bit set.
 	Permissions Permissions `json:"permissions,string"`
-
 	// Position is the position of this role.
 	Position int `json:"position"`
 	// Color is the integer representation of hexadecimal color code.
 	Color Color `json:"color"`
-
+	// Icon is the role icon hash.
+	Icon Hash `json:"icon"`
+	// UnicodeEmoji is the role unicode emoji as a standard emoji.
+	UnicodeEmoji string `json:"unicode_emoji"`
 	// Hoist specifies if this role is pinned in the user listing.
 	Hoist bool `json:"hoist"`
 	// Manages specifies whether this role is managed by an integration.
 	Managed bool `json:"managed"`
 	// Mentionable specifies whether this role is mentionable.
 	Mentionable bool `json:"mentionable"`
+	// Tags is the tags this role has.
+	Tags *RoleTags `json:"tags"`
 }
 
 // CreatedAt returns a time object representing when the role was created.
@@ -315,6 +323,28 @@ func (r Role) CreatedAt() time.Time {
 // Mention returns the mention of the Role.
 func (r Role) Mention() string {
 	return r.ID.Mention()
+}
+
+type RoleTags struct {
+	BotID             UserID        `json:"bot_id"`
+	IntegrationID     IntegrationID `json:"integration_id"`
+	PremiumSubscriber bool          `json:"-"`
+}
+
+func (r *RoleTags) UnmarshalJSON(data []byte) error {
+	// thanks Discord for not making this a bool 🙏
+	var fields map[string]interface{}
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	if val, ok := fields["premium_subscriber"]; ok {
+		r.PremiumSubscriber, ok = val.(bool)
+		if !ok {
+			return errors.New("RoleTags premium_subscriber field is not a bool")
+		}
+	}
+	type RawRoleTags RoleTags
+	return json.Unmarshal(data, (*RawRoleTags)(r))
 }
 
 // https://discord.com/developers/docs/resources/guild#guild-member-object

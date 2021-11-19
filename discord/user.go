@@ -112,8 +112,9 @@ const (
 	BugHunterLvl2
 	_
 	VerifiedBot
-	VerifiedBotDeveloper
-	CertifiedModerator
+	EarlyVerifiedBotDeveloper
+	CertifiedDiscordModerator
+	HTTPInteractionsBot
 )
 
 type UserNitro uint8
@@ -195,6 +196,9 @@ const (
 	JoinRequestActivity
 	SyncActivity
 	PlayActivity
+	PartyPrivacyFriendsActivity
+	PartyPrivacyVoiceChannelActivity
+	EmbeddedActivity
 )
 
 type ActivityTimestamps struct {

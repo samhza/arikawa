@@ -58,6 +58,8 @@ const (
 	AppFlagGatewayGuildMembersLimited
 	AppFlagVerificationPendingGuildLimit
 	AppFlagEmbedded
+	AppFlagGatewayMessageContent
+	AppFlagGatewayMessageContentLimited
 )
 
 type Team struct {

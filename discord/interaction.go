@@ -261,9 +261,28 @@ func ParseComponentInteraction(b []byte) (ComponentInteraction, error) {
 
 // CommandInteraction is a command interaction that Discord sends to us.
 type CommandInteraction struct {
-	ID      CommandID                  `json:"id"`
-	Name    string                     `json:"name"`
+	// ID is the ID of the invoked command.
+	ID CommandID `json:"id"`
+	// Name is the name of the invoked command.
+	Name string `json:"name"`
+	// Type is the type of the invoked command.
+	Type CommandType `json:"type"`
+	// Resolved is converted users + roles + channels.
+	Resolved *Resolved `json:"resolved"`
+	// Options is the params + values from the user.
 	Options []CommandInteractionOption `json:"options"`
+	// TargetID is the ID of the User or Message targeted by the command.
+	//
+	// It is only present on interactions of type UserCommand or MessageCommand.
+	TargetID Snowflake `json:"target_id,omitempty"`
+}
+
+type Resolved struct {
+	Users    map[UserID]User       `json:"users"`
+	Members  map[UserID]Member     `json:"members"`
+	Roles    map[RoleID]Role       `json:"roles"`
+	Channels map[ChannelID]Channel `json:"channels"`
+	Messages map[MessageID]Message `json:"messages"`
 }
 
 // InteractionType implements InteractionData.
@@ -276,6 +295,7 @@ func (*CommandInteraction) data() {}
 // CommandInteractionOption is an option for a Command interaction response.
 type CommandInteractionOption struct {
 	Name    string                     `json:"name"`
+	Type    CommandOptionType          `json:"type"`
 	Value   json.Raw                   `json:"value"`
 	Options []CommandInteractionOption `json:"options"`
 }
