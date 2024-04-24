@@ -90,7 +90,10 @@ func (c Codec) DecodeInto(ctx context.Context, r io.Reader, buf *DecodeBuffer, o
 
 	op.Op.Data = fn()
 	if err := op.Data.UnmarshalTo(op.Op.Data); err != nil {
-		return c.send(ctx, out, newErrOp(err, "cannot unmarshal JSON data from gateway"))
+		return c.send(ctx, out, newErrOp(err, fmt.Sprintf(
+			"cannot unmarshal JSON event (op %d type %q) from gateway",
+			op.Code, op.Type,
+		)))
 	}
 
 	return c.send(ctx, out, op.Op)
