@@ -431,7 +431,8 @@ func (m Member) AvatarURLWithType(t ImageType, guildID GuildID) string {
 	return "https://cdn.discordapp.com/guilds/" + guildID.String() + "/users/" + m.User.ID.String() + "/avatars/" + t.format(m.Avatar)
 }
 
-type MemberFlags uint8
+// MemberFlags represents the bit set of member flags.
+type MemberFlags uint32
 
 const (
 	MemberFlagsDidRejoin = 1 << iota
