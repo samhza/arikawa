@@ -128,14 +128,31 @@ func (r *Router) With(mws ...Middleware) *Router {
 func (r *Router) HandleInteraction(ev *discord.InteractionEvent) *api.InteractionResponse {
 	switch data := ev.Data.(type) {
 	case *discord.CommandInteraction:
-		return r.HandleCommand(ev, data)
+		return r.handleCommand(ev, data)
 	case *discord.AutocompleteInteraction:
-		return r.HandleAutocompletion(ev, data)
+		return r.handleAutocompletion(ev, data)
 	case discord.ComponentInteraction:
 		return r.handleComponent(ev, data)
 	default:
 		return nil
 	}
+}
+
+// HandleCommand implements CommandHandler. It applies middlewares onto the
+// handler to be executed.
+//
+// Deprecated: This function should not be used directly. Use [HandleInteraction]
+// instead. This function now calls HandleInteraction internally.
+func (r *Router) HandleCommand(ev *discord.InteractionEvent, data *discord.CommandInteraction) *api.InteractionResponse {
+	return r.HandleInteraction(ev)
+}
+
+// HandleAutocompletion handles an autocompletion event.
+//
+// Deprecated: This function should not be used directly. Use [HandleInteraction]
+// instead. This function now calls HandleInteraction internally.
+func (r *Router) HandleAutocompletion(ev *discord.InteractionEvent, data *discord.AutocompleteInteraction) *api.InteractionResponse {
+	return r.HandleInteraction(ev)
 }
 
 func (r *Router) callHandler(ev *discord.InteractionEvent, fn InteractionHandlerFunc) *api.InteractionResponse {
@@ -154,12 +171,7 @@ func (r *Router) callHandler(ev *discord.InteractionEvent, fn InteractionHandler
 	return h.HandleInteraction(context.Background(), ev)
 }
 
-// HandleCommand implements CommandHandler. It applies middlewares onto the
-// handler to be executed.
-//
-// Deprecated: This function should not be used directly. Use HandleInteraction
-// instead.
-func (r *Router) HandleCommand(ev *discord.InteractionEvent, data *discord.CommandInteraction) *api.InteractionResponse {
+func (r *Router) handleCommand(ev *discord.InteractionEvent, data *discord.CommandInteraction) *api.InteractionResponse {
 	cmdType := discord.SubcommandOptionType
 	if cmdIsGroup(data) {
 		cmdType = discord.SubcommandGroupOptionType
@@ -278,11 +290,7 @@ func (r *Router) AddAutocompleterFunc(name string, f AutocompleterFunc) {
 	r.AddAutocompleter(name, f)
 }
 
-// HandleAutocompletion handles an autocompletion event.
-//
-// Deprecated: This function should not be used directly. Use HandleInteraction
-// instead.
-func (r *Router) HandleAutocompletion(ev *discord.InteractionEvent, data *discord.AutocompleteInteraction) *api.InteractionResponse {
+func (r *Router) handleAutocompletion(ev *discord.InteractionEvent, data *discord.AutocompleteInteraction) *api.InteractionResponse {
 	cmdType := discord.SubcommandOptionType
 	if autocompIsGroup(data) {
 		cmdType = discord.SubcommandGroupOptionType
