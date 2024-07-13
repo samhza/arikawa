@@ -1,6 +1,7 @@
 package discord
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -159,6 +160,20 @@ func (ch Channel) CreatedAt() time.Time {
 // Mention returns a mention of the channel.
 func (ch Channel) Mention() string {
 	return ch.ID.Mention()
+}
+
+// URL generates a Discord client URL to the channel. If the channel doesn't
+// have a GuildID, it will generate a URL with the guild "@me".
+func (c Channel) URL() string {
+	var guildID = "@me"
+	if c.GuildID.IsValid() {
+		guildID = c.GuildID.String()
+	}
+
+	return fmt.Sprintf(
+		"https://discord.com/channels/%s/%s",
+		guildID, c.ID.String(),
+	)
 }
 
 // IconURL returns the URL to the channel icon in the PNG format.
