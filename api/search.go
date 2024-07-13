@@ -35,3 +35,15 @@ func (c *Client) Search(guildID discord.GuildID, data SearchData) (SearchRespons
 		httputil.WithSchema(c, data),
 	)
 }
+
+// SearchDirectMessages searches through a direct message channel.
+// SearchData.ChannelID must be a valid channel ID.
+func (c *Client) SearchDirectMessages(data SearchData) (SearchResponse, error) {
+	var resp SearchResponse
+
+	return resp, c.RequestJSON(
+		&resp, "GET",
+		EndpointChannels+data.ChannelID.String()+"/messages/search",
+		httputil.WithSchema(c, data),
+	)
+}
